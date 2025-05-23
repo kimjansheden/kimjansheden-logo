@@ -1,4 +1,5 @@
-// Export the main component as the default export
-import KimJanshedenLogo from "@/components/KimJanshedenLogo";
+import KimJanshedenLogo from "@components/KimJanshedenLogo";
 
+// Export all components and utilities that should be available to consumers
 export default KimJanshedenLogo;
+export type { KimJanshedenLogoProps } from "@/types";

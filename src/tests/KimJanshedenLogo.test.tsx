@@ -1,8 +1,40 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, cleanup } from "@testing-library/react";
+import { describe, it, expect, beforeEach } from "vitest";
+import { render, screen, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import KimJanshedenLogo from "./KimJanshedenLogo";
+import KimJanshedenLogo from "@components/KimJanshedenLogo";
 import React from "react";
+import { LOGO_TEXT } from "@/constants";
+
+// Test constants
+const EXPECTED_CLASSES = {
+  // Container classes
+  GROUP: "group",
+  INLINE_BLOCK: "inline-block",
+  RELATIVE: "relative",
+
+  // Image classes
+  CURSOR_POINTER: "cursor-pointer",
+  TRANSITION_ALL: "transition-all",
+  DURATION: "duration-300",
+  WILL_CHANGE_TRANSFORM: "will-change-transform",
+  HOVER_SCALE: "hover:scale-110",
+
+  // Default sizes
+  DEFAULT_H_MOBILE: "h-6",
+  DEFAULT_W_MOBILE: "w-6",
+  DEFAULT_H_DESKTOP: "sm:h-8",
+  DEFAULT_W_DESKTOP: "sm:w-8",
+} as const;
+
+// Helper function to get common elements
+const getCommonElements = () => {
+  const link = screen.getByRole("link");
+  const image = screen.getByRole("img");
+  const container = link.parentElement;
+  const tooltip = screen.getByText(/Denna sida är skapad av Kim Jansheden/);
+
+  return { link, image, container, tooltip };
+};
 
 // Rensa efter varje test för att undvika läckage mellan tester
 beforeEach(() => {
@@ -106,57 +138,62 @@ describe("KimJanshedenLogo", () => {
   describe("CSS Classes and Styling", () => {
     it("applies correct CSS classes to the container", () => {
       render(<KimJanshedenLogo />);
-      const link = screen.getByRole("link");
-      const container = link.parentElement;
+      const { link, container } = getCommonElements();
 
       // Check grouping and positioning classes
-      expect(container).toHaveClass("group");
-      expect(container).toHaveClass("relative");
-      expect(container).toHaveClass("inline-block");
+      expect(container).toHaveClass(EXPECTED_CLASSES.GROUP);
+      expect(container).toHaveClass(EXPECTED_CLASSES.RELATIVE);
+      expect(container).toHaveClass(EXPECTED_CLASSES.INLINE_BLOCK);
     });
 
     it("applies correct CSS classes to the logo image", () => {
       render(<KimJanshedenLogo />);
-      const logoImage = screen.getByRole("img");
+      const { image } = getCommonElements();
 
       // Check basic size and cursor styling
-      expect(logoImage).toHaveClass("h-8", "w-8");
-      expect(logoImage).toHaveClass("cursor-pointer");
+      expect(image).toHaveClass(
+        EXPECTED_CLASSES.DEFAULT_H_MOBILE,
+        EXPECTED_CLASSES.DEFAULT_W_MOBILE
+      );
+      expect(image).toHaveClass(EXPECTED_CLASSES.CURSOR_POINTER);
 
       // Check transitions and animations
-      expect(logoImage).toHaveClass("transition-all");
-      expect(logoImage).toHaveClass("duration-300");
-      expect(logoImage).toHaveClass("will-change-transform");
+      expect(image).toHaveClass(EXPECTED_CLASSES.TRANSITION_ALL);
+      expect(image).toHaveClass(EXPECTED_CLASSES.DURATION);
+      expect(image).toHaveClass(EXPECTED_CLASSES.WILL_CHANGE_TRANSFORM);
 
       // Check hover effects
-      expect(logoImage).toHaveClass("hover:scale-110");
-      expect(logoImage.className).toMatch(
+      expect(image).toHaveClass(EXPECTED_CLASSES.HOVER_SCALE);
+      expect(image.className).toMatch(
         /hover:drop-shadow-\[0_0_0\.5em_#646cffaa\]/
       );
 
       // Check responsive size classes
-      expect(logoImage).toHaveClass("sm:h-10", "sm:w-10");
+      expect(image).toHaveClass(
+        EXPECTED_CLASSES.DEFAULT_H_DESKTOP,
+        EXPECTED_CLASSES.DEFAULT_W_DESKTOP
+      );
     });
 
     it("applies correct CSS classes to the tooltip", () => {
       render(<KimJanshedenLogo />);
       const tooltip = screen.getByText(/Denna sida är skapad av Kim Jansheden/);
 
-      // Positioning
+      // Positioning - for default rendering (no bottom position), tooltip should be below the logo
       expect(tooltip).toHaveClass(
         "absolute",
-        "bottom-full",
+        "top-full", // Changed from bottom-full to top-full for default position
         "left-1/2",
         "-translate-x-1/2",
-        "mb-2"
+        "mt-2" // Changed from mb-2 to mt-2 for default position
       );
 
       // Visibility and animation
       expect(tooltip).toHaveClass(
         "opacity-0",
         "group-hover:opacity-100",
-        "transition-all",
-        "duration-300"
+        EXPECTED_CLASSES.TRANSITION_ALL,
+        EXPECTED_CLASSES.DURATION
       );
 
       // Appearance
@@ -181,8 +218,7 @@ describe("KimJanshedenLogo", () => {
   describe("Tooltip Content and Behavior", () => {
     it("displays the full Swedish tooltip text", () => {
       render(<KimJanshedenLogo />);
-      const expectedText =
-        "Denna sida är skapad av Kim Jansheden. Vill du göra/ha din egen hemsida till dig eller ditt företag? Klicka här för att kontakta Kim Jansheden";
+      const expectedText = LOGO_TEXT;
       expect(screen.getByText(expectedText)).toBeInTheDocument();
     });
 
@@ -392,7 +428,7 @@ describe("KimJanshedenLogo", () => {
       const image = screen.getByRole("img");
 
       // Check that will-change is used for better performance in animations
-      expect(image).toHaveClass("will-change-transform");
+      expect(image).toHaveClass(EXPECTED_CLASSES.WILL_CHANGE_TRANSFORM);
     });
 
     it("uses efficient CSS transitions", () => {
@@ -402,8 +438,14 @@ describe("KimJanshedenLogo", () => {
       const tooltip = screen.getByText(/Denna sida är skapad av Kim Jansheden/);
 
       // Check that both image and tooltip use optimized CSS transitions
-      expect(image).toHaveClass("transition-all", "duration-300");
-      expect(tooltip).toHaveClass("transition-all", "duration-300");
+      expect(image).toHaveClass(
+        EXPECTED_CLASSES.TRANSITION_ALL,
+        EXPECTED_CLASSES.DURATION
+      );
+      expect(tooltip).toHaveClass(
+        EXPECTED_CLASSES.TRANSITION_ALL,
+        EXPECTED_CLASSES.DURATION
+      );
     });
   });
 
@@ -415,10 +457,10 @@ describe("KimJanshedenLogo", () => {
       const image = screen.getByRole("img");
 
       // Check default mobile size
-      expect(image).toHaveClass("h-8", "w-8");
+      expect(image).toHaveClass("h-6", "w-6");
 
       // Check desktop size at the sm breakpoint
-      expect(image).toHaveClass("sm:h-10", "sm:w-10");
+      expect(image).toHaveClass("sm:h-8", "sm:w-8");
     });
 
     it("has responsive sizes for the tooltip", () => {
@@ -429,6 +471,234 @@ describe("KimJanshedenLogo", () => {
       // Check responsive maximum width
       expect(tooltip).toHaveClass("max-w-[250px]");
       expect(tooltip).toHaveClass("sm:max-w-xs");
+    });
+  });
+
+  // Test className handling and class separation
+  describe("ClassName Handling", () => {
+    it("applies custom size classes to the image and overrides defaults", () => {
+      render(<KimJanshedenLogo className="h-32 w-32" />);
+      const logoImage = screen.getByRole("img");
+
+      // Check that custom size classes are applied instead of defaults
+      expect(logoImage).toHaveClass("h-32", "w-32");
+      // Verify default size classes are NOT present
+      expect(logoImage).not.toHaveClass("h-6", "w-6");
+      // Verify base animation classes are still present
+      expect(logoImage).toHaveClass(
+        EXPECTED_CLASSES.CURSOR_POINTER,
+        EXPECTED_CLASSES.TRANSITION_ALL,
+        EXPECTED_CLASSES.DURATION
+      );
+    });
+
+    it("applies positioning classes to the container, not the image", () => {
+      render(<KimJanshedenLogo className="fixed bottom-4 right-4" />);
+      const logoImage = screen.getByRole("img");
+      const link = screen.getByRole("link");
+      const container = link.parentElement;
+
+      // Check that positioning classes go to container
+      expect(container).toHaveClass("fixed", "bottom-4", "right-4");
+      // Check that image doesn't get positioning classes
+      expect(logoImage).not.toHaveClass("fixed", "bottom-4", "right-4");
+      // Check that container still has base classes
+      expect(container).toHaveClass("group", EXPECTED_CLASSES.INLINE_BLOCK);
+    });
+
+    it("applies flexbox utilities to the container", () => {
+      render(<KimJanshedenLogo className="mt-auto mb-4 self-end" />);
+      const logoImage = screen.getByRole("img");
+      const link = screen.getByRole("link");
+      const container = link.parentElement;
+
+      // Check that flexbox utilities go to container
+      expect(container).toHaveClass("mt-auto", "mb-4", "self-end");
+      // Check that image doesn't get flexbox utilities
+      expect(logoImage).not.toHaveClass("mt-auto", "mb-4", "self-end");
+    });
+
+    it("correctly separates mixed container and image classes", () => {
+      render(
+        <KimJanshedenLogo className="fixed top-4 left-4 h-16 w-16 mt-2" />
+      );
+      const logoImage = screen.getByRole("img");
+      const link = screen.getByRole("link");
+      const container = link.parentElement;
+
+      // Container should get positioning and spacing classes
+      expect(container).toHaveClass("fixed", "top-4", "left-4", "mt-2");
+      expect(container).toHaveClass("group", EXPECTED_CLASSES.INLINE_BLOCK);
+
+      // Image should get size classes and base styling
+      expect(logoImage).toHaveClass("h-16", "w-16");
+      expect(logoImage).toHaveClass(
+        EXPECTED_CLASSES.CURSOR_POINTER,
+        EXPECTED_CLASSES.TRANSITION_ALL
+      );
+
+      // Verify class separation worked correctly
+      expect(logoImage).not.toHaveClass("fixed", "top-4", "left-4", "mt-2");
+      expect(container).not.toHaveClass("h-16", "w-16");
+    });
+
+    it("handles empty className with default behavior", () => {
+      render(<KimJanshedenLogo className="" />);
+      const logoImage = screen.getByRole("img");
+      const link = screen.getByRole("link");
+      const container = link.parentElement;
+
+      // Should have default size classes on image
+      expect(logoImage).toHaveClass("h-6", "w-6", "sm:h-8", "sm:w-8");
+      // Should have default container classes
+      expect(container).toHaveClass(
+        "group",
+        EXPECTED_CLASSES.INLINE_BLOCK,
+        "relative"
+      );
+    });
+
+    it("handles no className prop with default behavior", () => {
+      render(<KimJanshedenLogo />);
+      const logoImage = screen.getByRole("img");
+      const link = screen.getByRole("link");
+      const container = link.parentElement;
+
+      // Should have default size classes on image
+      expect(logoImage).toHaveClass("h-6", "w-6", "sm:h-8", "sm:w-8");
+      // Should have default container classes
+      expect(container).toHaveClass(
+        "group",
+        EXPECTED_CLASSES.INLINE_BLOCK,
+        "relative"
+      );
+    });
+
+    it("handles responsive size classes correctly", () => {
+      render(
+        <KimJanshedenLogo className="h-4 w-4 sm:h-12 sm:w-12 md:h-16 md:w-16" />
+      );
+      const logoImage = screen.getByRole("img");
+
+      // Check that all responsive size classes are applied to image
+      expect(logoImage).toHaveClass("h-4", "w-4");
+      expect(logoImage).toHaveClass("sm:h-12", "sm:w-12");
+      expect(logoImage).toHaveClass("md:h-16", "md:w-16");
+
+      // Verify defaults are not present
+      expect(logoImage).not.toHaveClass("h-6", "w-6");
+    });
+
+    it("handles complex spacing utilities on container", () => {
+      render(<KimJanshedenLogo className="mx-auto my-4 px-2 py-1" />);
+      const logoImage = screen.getByRole("img");
+      const link = screen.getByRole("link");
+      const container = link.parentElement;
+
+      // Container should get all spacing utilities
+      expect(container).toHaveClass("mx-auto", "my-4", "px-2", "py-1");
+      expect(container).toHaveClass("group", EXPECTED_CLASSES.INLINE_BLOCK);
+
+      // Image should not get spacing utilities
+      expect(logoImage).not.toHaveClass("mx-auto", "my-4", "px-2", "py-1");
+    });
+
+    it("handles absolute positioning with size classes", () => {
+      render(
+        <KimJanshedenLogo className="absolute top-0 left-0 h-20 w-20 z-10" />
+      );
+      const logoImage = screen.getByRole("img");
+      const link = screen.getByRole("link");
+      const container = link.parentElement;
+
+      // Container gets positioning and z-index
+      expect(container).toHaveClass("absolute", "top-0", "left-0", "z-10");
+      expect(container).toHaveClass("group", EXPECTED_CLASSES.INLINE_BLOCK);
+
+      // Image gets size classes
+      expect(logoImage).toHaveClass("h-20", "w-20");
+      expect(logoImage).toHaveClass(
+        EXPECTED_CLASSES.CURSOR_POINTER,
+        EXPECTED_CLASSES.TRANSITION_ALL
+      );
+
+      // Verify container doesn't get relative (since we have absolute positioning)
+      expect(container).not.toHaveClass("relative");
+    });
+
+    it("handles custom classes with hover and animation effects preserved", () => {
+      render(<KimJanshedenLogo className="h-24 w-24 opacity-80" />);
+      const logoImage = screen.getByRole("img");
+
+      // Custom classes should be applied
+      expect(logoImage).toHaveClass("h-24", "w-24", "opacity-80");
+
+      // Base animation and hover effects should be preserved
+      expect(logoImage).toHaveClass(EXPECTED_CLASSES.CURSOR_POINTER);
+      expect(logoImage).toHaveClass(
+        EXPECTED_CLASSES.TRANSITION_ALL,
+        EXPECTED_CLASSES.DURATION
+      );
+      expect(logoImage).toHaveClass(EXPECTED_CLASSES.WILL_CHANGE_TRANSFORM);
+      expect(logoImage).toHaveClass(EXPECTED_CLASSES.HOVER_SCALE);
+      expect(logoImage.className).toMatch(
+        /hover:drop-shadow-\[0_0_0\.5em_#646cffaa\]/
+      );
+    });
+
+    it("handles display utilities on container", () => {
+      render(<KimJanshedenLogo className="block hidden" />);
+      const link = screen.getByRole("link");
+      const container = link.parentElement;
+
+      // Display utilities should go to container
+      expect(container).toHaveClass("block", "hidden");
+      expect(container).toHaveClass("group");
+    });
+
+    it("handles responsive display utilities", () => {
+      render(<KimJanshedenLogo className="sm:inline-block md:block lg:flex" />);
+      const link = screen.getByRole("link");
+      const container = link.parentElement;
+
+      // Responsive display utilities should go to container
+      expect(container).toHaveClass("sm:inline-block", "md:block", "lg:flex");
+    });
+
+    it("handles self-positioning utilities for flexbox/grid", () => {
+      render(
+        <KimJanshedenLogo className="self-start justify-self-end place-self-center" />
+      );
+      const logoImage = screen.getByRole("img");
+      const link = screen.getByRole("link");
+      const container = link.parentElement;
+
+      // Self-positioning utilities should go to container
+      expect(container).toHaveClass(
+        "self-start",
+        "justify-self-end",
+        "place-self-center"
+      );
+      expect(container).toHaveClass("group", EXPECTED_CLASSES.INLINE_BLOCK);
+
+      // Image should not get these classes
+      expect(logoImage).not.toHaveClass(
+        "self-start",
+        "justify-self-end",
+        "place-self-center"
+      );
+    });
+
+    it("handles whitespace and multiple spaces in className", () => {
+      render(<KimJanshedenLogo className="  h-8   w-8  mt-4  " />);
+      const logoImage = screen.getByRole("img");
+      const link = screen.getByRole("link");
+      const container = link.parentElement;
+
+      // Should correctly parse and apply classes despite extra whitespace
+      expect(logoImage).toHaveClass("h-8", "w-8");
+      expect(container).toHaveClass("mt-4");
+      expect(container).toHaveClass("group", EXPECTED_CLASSES.INLINE_BLOCK);
     });
   });
 });
