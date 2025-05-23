@@ -28,6 +28,14 @@
     "name": "Kim Jansheden",
     "email": "kim.jansheden@hotmail.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kimjansheden/kimjansheden-logo.git"
+  },
+  "homepage": "https://kimjansheden.se",
+  "bugs": {
+    "url": "https://github.com/kimjansheden/kimjansheden-logo/issues"
+  },
   "license": "MIT",
   "peerDependencies": {
     "@tailwindcss/postcss": "^4.1.7",
