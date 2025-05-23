@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "target": "es2020", // Modern JavaScript target
+    "module": "esnext", // Use ESNext for modern ES modules
+    "moduleResolution": "node", // How modules are resolved
+    "lib": ["dom", "es2020"],
+    "jsx": "react",
+    "declaration": true,
+    "outDir": "./dist",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+
+    /* Aliasing */
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "@components/*": ["src/components/*"]
+    }
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "dist"]
+}
