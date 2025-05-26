@@ -172,10 +172,12 @@ export const KimJanshedenLogo: React.FC<KimJanshedenLogoProps> = ({
         - Initially invisible (opacity-0) and slightly translated
         - Becomes visible and repositions on hover
         - Includes drop shadow and background for readability
+        - Fix: pointer-events-none prevents the tooltip from interfering with hover detection
+          - Only the visible icon should trigger the hover effect
       */}
       <span
         className={`absolute ${tooltipPositionClasses} whitespace-normal rounded bg-black/80 px-3 py-2 text-center text-xs text-white opacity-0 shadow-lg transition-all duration-300 group-hover:opacity-100 
-                     max-w-[250px] sm:max-w-xs z-50`}
+                   max-w-[250px] sm:max-w-xs z-50 pointer-events-none`}
       >
         {LOGO_TEXT}
       </span>
