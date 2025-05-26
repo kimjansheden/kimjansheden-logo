@@ -1,6 +1,6 @@
 {
   "name": "kimjansheden-logo",
-  "version": "1.0.13",
+  "version": "1.0.14",
   "description": "A React component for displaying Kim Jansheden's branded logo",
   "type": "module",
   "main": "dist/index.js",
@@ -12,10 +12,13 @@
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
+    "dev:link": "npm run build && npm link",
     "prepublishOnly": "npm run build",
     "test": "vitest",
     "test:watch": "vitest --watch",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "test:visual": "vitest run src/tests/KimJanshedenLogo.visual.test.tsx",
+    "test:hover": "vitest run src/tests/KimJanshedenLogo.visual.test.tsx --reporter=verbose"
   },
   "keywords": [
     "react",
@@ -61,7 +64,7 @@
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@types/node": "^22.15.21",
-    "@types/react": "^19.1.5",
+    "@types/react": ">=19.0.0",
     "jsdom": "^26.1.0",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.7",

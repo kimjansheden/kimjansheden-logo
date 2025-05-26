@@ -115,8 +115,13 @@ export const KimJanshedenLogo: React.FC<KimJanshedenLogoProps> = ({
   console.log("Final container classes:", finalContainerClasses);
 
   // Base classes for the image - essential styling and animations
+  // Fixed hover layout shift by adding transparent drop-shadow in default state
+  // This ensures the element maintains consistent layout space in both hover and non-hover states
+  // Without the transparent shadow, the element would shift position when the visible shadow is applied on hover
   const baseImageClasses =
-    "cursor-pointer transition-all duration-300 will-change-transform hover:scale-110 hover:drop-shadow-[0_0_0.5em_#646cffaa]";
+    "cursor-pointer transition-all duration-300 will-change-transform hover:scale-110 drop-shadow-[0_0_0.5em_transparent] hover:drop-shadow-[0_0_0.5em_#646cffaa]";
+
+  console.log("Base image classes:", baseImageClasses);
 
   // Default size classes - only used if no size classes are provided in imageClasses
   const defaultSizeClasses = "h-6 w-6 sm:h-8 sm:w-8";
