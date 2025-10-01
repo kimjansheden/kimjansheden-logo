@@ -1,6 +1,6 @@
 {
   "name": "kimjansheden-logo",
-  "version": "1.0.15",
+  "version": "1.0.16",
   "description": "A React component for displaying Kim Jansheden's branded logo",
   "type": "module",
   "main": "dist/index.js",

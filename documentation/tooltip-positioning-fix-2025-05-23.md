@@ -1,5 +1,7 @@
 # Tooltip Positioning Fix - Lösning av viewport-problem
 
+> **Status (oktober 2025):** Den här anteckningen dokumenterar den ursprungliga komponentfixen från 23 maj 2025. Det senaste problemet (Tailwind 4 som inte genererade tooltip-klasser) löses i `tooltip-positioning-fix-2025-10-01.md`.
+
 ## Problemet
 
 När `KimJanshedenLogo`-komponenten användes med klassen `"fixed bottom-0 z-10 m-2"`, visades tooltip:en för långt till vänster och gick utanför viewport-gränserna. Detta skapade en dålig användarupplevelse där tooltip:en inte var synlig eller läsbar.
