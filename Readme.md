@@ -6,18 +6,39 @@
 npm install kimjansheden-logo
 ```
 
+### Quick start (recommended)
+
+Import the package CSS where you use the component. This ships the minimal styles the logo needs (tooltip, transitions, shadows, base sizing) and works with or without Tailwind scanning `node_modules`.
+
+```ts
+// Near where you use the component
+import 'kimjansheden-logo/styles.css';
+```
+
+Then use the component as usual:
+
+```tsx
+import KimJanshedenLogo from 'kimjansheden-logo';
+
+export function FooterBadge() {
+  return <KimJanshedenLogo />;
+}
+```
+
+You can still pass Tailwind utilities via `className` to control size and positioning if Tailwind is present in your project.
+
 ### Requirements
 
-This component uses Tailwind CSS classes. Your project should already have Tailwind CSS installed and configured.
+This component uses Tailwind-style utility classes in its markup. If your project runs Tailwind CSS, the import above often suffices. For Tailwind v4 projects that do not scan `node_modules`, see the options below.
 
 #### Tailwind source configuration (v4+)
 
-Tailwind CSS v4 ignores `node_modules` when scanning for classes. To make sure the tooltip utilities (`bottom-full`, `top-full`, `left-0`, `right-0`, and friends) are generated, register the package explicitly in the stylesheet where you import Tailwind:
+If you prefer to rely solely on Tailwind-generated utilities (and skip the `styles.css` import), Tailwind CSS v4 ignores `node_modules` by default. Register the package explicitly in the stylesheet where you import Tailwind so that utilities used by the component are generated:
 
 ```css
 /* Register Tailwind at the top of your CSS file */
 @import "tailwindcss";
-/* Scan the published bundle for utility classes (adjust the relative path to match your project) */
+/* Scan the published bundle for utility classes (adjust the relative path) */
 @source "../node_modules/kimjansheden-logo/dist";
 ```
 
@@ -69,6 +90,8 @@ Restart VS Code afterwards and the warning disappears. Alternatively, install th
 
 ```tsx
 import KimJanshedenLogo from "kimjansheden-logo";
+// Recommended: import base styles once near usage
+import 'kimjansheden-logo/styles.css';
 ```
 
 ### Use the component
@@ -95,3 +118,8 @@ import KimJanshedenLogo from "kimjansheden-logo";
 // Use with relative positioning and offset
 <KimJanshedenLogo className="relative top-2 left-4 h-10 w-10" />
 ```
+
+### Notes
+
+- Importing `kimjansheden-logo/styles.css` ensures tooltip and animation styles are present even if Tailwind v4 does not scan `node_modules`.
+- If you prefer not to import the CSS, configure Tailwind v4 to scan the package using `@source` as shown above, or safelist the few utilities the component needs.

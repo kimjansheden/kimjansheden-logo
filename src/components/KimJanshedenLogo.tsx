@@ -8,6 +8,14 @@ import React from "react";
 /**
  * A React component for displaying Kim Jansheden's developer signature logo.
  *
+ * Important: Import the package CSS near where you use the component
+ * so tooltip and animation styles are always available (especially in
+ * Tailwind v4 projects that do not scan node_modules by default):
+ *
+ * ```ts
+ * import 'kimjansheden-logo/styles.css';
+ * ```
+ *
  * - Displays a logo that links to Kim Jansheden's website
  * - Shows an informative tooltip on hover
  * - Includes smooth animations for better user experience
@@ -62,8 +70,10 @@ export const KimJanshedenLogo: React.FC<KimJanshedenLogoProps> = ({
   // Split className into individual classes for processing
   const classArray = className.split(" ").filter((cls) => cls.trim() !== "");
 
-  console.log("Received className:", className);
-  console.log("Class array after split:", classArray);
+  if (process.env.NODE_ENV === "development") {
+    console.log("Received className:", className);
+    console.log("Class array after split:", classArray);
+  }
 
   // Check positioning for smart tooltip placement
   const isBottomPositioned = checkBottomPosition({
@@ -85,7 +95,9 @@ export const KimJanshedenLogo: React.FC<KimJanshedenLogoProps> = ({
     return isPositionType || isDirectional || isDisplayType || isContainerUtil;
   });
 
-  console.log("Container classes received:", containerClasses);
+  if (process.env.NODE_ENV === "development") {
+    console.log("Container classes received:", containerClasses);
+  }
 
   // Get classes that should apply to the image (size, colors, etc.)
   // All classes that are NOT container classes should go to the image
@@ -100,7 +112,9 @@ export const KimJanshedenLogo: React.FC<KimJanshedenLogoProps> = ({
     );
   });
 
-  console.log("Image classes received:", imageClasses);
+  if (process.env.NODE_ENV === "development") {
+    console.log("Image classes received:", imageClasses);
+  }
 
   // Base classes for the container
   const baseContainerClasses = "group inline-block";
@@ -112,7 +126,9 @@ export const KimJanshedenLogo: React.FC<KimJanshedenLogoProps> = ({
       ? `${baseContainerClasses} ${containerClasses.join(" ")}`.trim()
       : `${baseContainerClasses} relative`.trim();
 
-  console.log("Final container classes:", finalContainerClasses);
+  if (process.env.NODE_ENV === "development") {
+    console.log("Final container classes:", finalContainerClasses);
+  }
 
   // Base classes for the image - essential styling and animations
   // Fixed hover layout shift by adding transparent drop-shadow in default state
@@ -121,7 +137,9 @@ export const KimJanshedenLogo: React.FC<KimJanshedenLogoProps> = ({
   const baseImageClasses =
     "cursor-pointer transition-all duration-300 will-change-transform hover:scale-110 drop-shadow-[0_0_0.5em_transparent] hover:drop-shadow-[0_0_0.5em_#646cffaa]";
 
-  console.log("Base image classes:", baseImageClasses);
+  if (process.env.NODE_ENV === "development") {
+    console.log("Base image classes:", baseImageClasses);
+  }
 
   // Default size classes - only used if no size classes are provided in imageClasses
   const defaultSizeClasses = "h-6 w-6 sm:h-8 sm:w-8";
@@ -140,7 +158,9 @@ export const KimJanshedenLogo: React.FC<KimJanshedenLogoProps> = ({
       ? `${baseImageClasses} ${imageClasses.join(" ")}`.trim()
       : `${baseImageClasses} ${defaultSizeClasses}`.trim();
 
-  console.log("Final image classes:", finalImageClasses);
+  if (process.env.NODE_ENV === "development") {
+    console.log("Final image classes:", finalImageClasses);
+  }
 
   // Determine tooltip position based on container position
   // Vertical positioning: If positioned at bottom, show tooltip above, otherwise show it below

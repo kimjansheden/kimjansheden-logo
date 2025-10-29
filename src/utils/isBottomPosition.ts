@@ -2,7 +2,7 @@ import { CheckBottomPositionOptions } from "@/types";
 
 /**
  * Utility function to determine if the logo is positioned at the bottom of the screen.
- * 
+ *
  * This function analyzes class names to detect bottom positioning with a configurable tolerance.
  * It supports both standard and responsive Tailwind utility classes.
  *
@@ -14,7 +14,7 @@ import { CheckBottomPositionOptions } from "@/types";
  * // Returns true for classes within tolerance
  * checkBottomPosition({classNames: ['bottom-4', 'right-0']}) // true (within default tolerance of 8)
  * checkBottomPosition({classNames: ['sm:bottom-8']}) // true (responsive variant within tolerance)
- * 
+ *
  * // Returns false for classes beyond tolerance or non-bottom positions
  * checkBottomPosition({classNames: ['bottom-10']}) // false (beyond default tolerance)
  * checkBottomPosition({classNames: ['top-0']}) // false (not a bottom position)
@@ -37,10 +37,12 @@ export const checkBottomPosition = ({
     if (match) {
       // The numeric value is in the second capture group
       const value = parseInt(match[2], 10);
-      console.log(`Matched ${cls} with value ${value}`);
+      if (process.env.NODE_ENV === "development") {
+        console.log(`Matched ${cls} with value ${value}`);
+      }
       return value <= bottomPositionTolerance;
     }
-    
+
     return false;
   });
 };

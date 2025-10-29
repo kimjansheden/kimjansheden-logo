@@ -1,11 +1,13 @@
 /**
  * Properties for the KimJanshedenLogo component.
  *
- * @property {string} [className] - Optional additional CSS classes to apply to the logo image.
- *
- * Allows for customization of size, positioning, and other styles
+ * Allows for customization of size, positioning, and other styles.
  */
 export interface KimJanshedenLogoProps {
+  /**
+   * Optional additional CSS classes to apply to the logo image.
+   * Useful for customizing size (e.g. `w-8 h-8`), positioning, and visuals.
+   */
   className?: string;
 }
 
